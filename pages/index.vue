@@ -226,7 +226,6 @@ export default {
       }
     },
     async loadWeather(coords) {
-      console.log(coords);
       await fetch(
         `${process.env.API_BASE_URL}/weather?${
           coords
@@ -307,14 +306,12 @@ export default {
           this.showError = false;
           this.trackingIsEnable = true;
           this.trackingCoords = pos.coords;
-          console.log(this.trackingCoords);
+
           this.loadWeather(pos.coords);
-          console.log(this.weather);
         },
         (err) => {
           this.showError = true;
           this.weather.message = err.message;
-          console.log(err.message);
         }
       );
 
