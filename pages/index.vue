@@ -226,6 +226,7 @@ export default {
       }
     },
     async loadWeather(coords) {
+      console.log(process.env.API_BASE_URL)
       await fetch(
         `${process.env.API_BASE_URL}/weather?${
           coords
