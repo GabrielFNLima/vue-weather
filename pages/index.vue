@@ -260,7 +260,7 @@ export default{
         this.weather.cod != "401"
       ) {
         await fetch(
-          `${'https://api.openweathermap.org/data/2.5'}/onecall?lat=${
+          `https://api.openweathermap.org/data/2.5/onecall?lat=${
             coords != "undefined" ? this.weather.coord.lat : coords.latitude
           }&lon=${
             coords != "undefined" ? this.weather.coord.lon : coords.longitude
