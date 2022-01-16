@@ -146,6 +146,17 @@
       <v-icon color="#fff">mdi-alert</v-icon>
       You are offline
     </div>
+
+    <div class="develope-by">
+      <a href="https://github.com/GabrielFNLima">Developed by Gabriel Lima</a>
+      <div class="separator">|</div>
+          <a
+            href="https://github.com/GabrielFNLima/vue-weather"
+            target="_blank"
+          >
+            vue-weather repository
+          </a>
+    </div>
   </main>
 </template>
 
@@ -428,13 +439,13 @@ export default {
           return `${month} ${date}`;
       }
     },
-   async loadWeather(coords) {
-     console.log(coords)
+    async loadWeather(coords) {
+      console.log(coords);
       await fetch(
         `${process.env.API_BASE_URL}/weather?${
-          coords?
-          'lat='+coords.latitude+'&lon='+coords.longitude :
-          "q=" + this.searchBarText
+          coords
+            ? "lat=" + coords.latitude + "&lon=" + coords.longitude
+            : "q=" + this.searchBarText
         }&lang=pt_br&appid=${process.env.API_KEY}&units=metric`
       )
         .then((res) => {
@@ -463,7 +474,13 @@ export default {
         this.weather.cod != "401"
       ) {
         await fetch(
-          `${process.env.API_BASE_URL}/onecall?lat=${coords != 'undefined'? this.weather.coord.lat:coords.latitude }&lon=${coords != 'undefined'?this.weather.coord.lon:coords.longitude}&lang=pt_br&exclude=hourly,minutely&appid=${process.env.API_KEY}&units=metric`
+          `${process.env.API_BASE_URL}/onecall?lat=${
+            coords != "undefined" ? this.weather.coord.lat : coords.latitude
+          }&lon=${
+            coords != "undefined" ? this.weather.coord.lon : coords.longitude
+          }&lang=pt_br&exclude=hourly,minutely&appid=${
+            process.env.API_KEY
+          }&units=metric`
         )
           .then((res) => {
             return res.json();
@@ -479,14 +496,14 @@ export default {
         if (type == "refresh") {
           this.searchBarText = JSON.parse(localStorage.getItem("weather")).name;
         }
-        if (this.searchBarText == "" ) {
+        if (this.searchBarText == "") {
           this.showError = true;
           this.weather.message = "Please enter a valid city name";
           this.showLoading = false;
           return;
         }
 
-        this.loadWeather()
+        this.loadWeather();
       }
     },
     tracking() {
@@ -503,7 +520,7 @@ export default {
           this.trackingCoords = pos.coords;
           console.log(this.trackingCoords);
           this.loadWeather(pos.coords);
-          console.log(this.weather)
+          console.log(this.weather);
         },
         (err) => {
           this.showError = true;
