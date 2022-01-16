@@ -158,7 +158,7 @@
 </template>
 
 <script>
-export default {
+export default{
   data() {
     return {
       searchBarText: "",
@@ -226,13 +226,13 @@ export default {
       }
     },
     async loadWeather(coords) {
-      console.log(process.env.API_BASE_URL)
+      console.log('https://api.openweathermap.org/data/2.5')
       await fetch(
-        `${process.env.API_BASE_URL}/weather?${
+        `https://api.openweathermap.org/data/2.5/weather?${
           coords
             ? "lat=" + coords.latitude + "&lon=" + coords.longitude
             : "q=" + this.searchBarText
-        }&lang=pt_br&appid=${process.env.API_KEY}&units=metric`
+        }&lang=pt_br&appid=${'37be597eefd504da42bc241d52b4ac88'}&units=metric`
       )
         .then((res) => {
           return res.json();
@@ -260,12 +260,12 @@ export default {
         this.weather.cod != "401"
       ) {
         await fetch(
-          `${process.env.API_BASE_URL}/onecall?lat=${
+          `${'https://api.openweathermap.org/data/2.5'}/onecall?lat=${
             coords != "undefined" ? this.weather.coord.lat : coords.latitude
           }&lon=${
             coords != "undefined" ? this.weather.coord.lon : coords.longitude
           }&lang=pt_br&exclude=hourly,minutely&appid=${
-            process.env.API_KEY
+            '37be597eefd504da42bc241d52b4ac88'
           }&units=metric`
         )
           .then((res) => {
