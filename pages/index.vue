@@ -1,7 +1,12 @@
 <template>
   <main>
     <div class="serach-box">
-      <div class="search-box-item">
+      <div class="search-box-item toggle-darkmode">
+        <button @click="toggleDarkMode">
+          <v-icon>mdi-theme-light-dark</v-icon>
+        </button>
+      </div>
+      <div class="search-box-item input">
         <input
           type="text"
           class="search-bar"
@@ -158,7 +163,7 @@
 </template>
 
 <script>
-export default{
+export default {
   data() {
     return {
       searchBarText: "",
@@ -169,6 +174,7 @@ export default{
       showLoading: false,
       trackingIsEnable: false,
       trackingCoords: {},
+      darkMode: false,
     };
   },
   async fetch() {
@@ -179,7 +185,18 @@ export default{
       ? JSON.parse(localStorage.getItem("forecast"))
       : {};
     this.trackingIsEnable = Boolean(localStorage.getItem("trackingIsEnable"));
+
+    if (
+      window.matchMedia("(prefers-color-scheme: dark)").matches &&
+      localStorage.getItem("darkMode") !== "false"
+    ) {
+      localStorage.setItem("darkMode", true);
+      this.loadDarkMode();
+    } else {
+      this.loadDarkMode();
+    }
   },
+  created() {},
   methods: {
     dateBuilder(dt, type) {
       let d = new Date(dt * 1000);
@@ -226,13 +243,13 @@ export default{
       }
     },
     async loadWeather(coords) {
-      console.log('https://api.openweathermap.org/data/2.5')
+      console.log("https://api.openweathermap.org/data/2.5");
       await fetch(
         `https://api.openweathermap.org/data/2.5/weather?${
           coords
             ? "lat=" + coords.latitude + "&lon=" + coords.longitude
             : "q=" + this.searchBarText
-        }&lang=pt_br&appid=${'37be597eefd504da42bc241d52b4ac88'}&units=metric`
+        }&lang=pt_br&appid=${"37be597eefd504da42bc241d52b4ac88"}&units=metric`
       )
         .then((res) => {
           return res.json();
@@ -264,9 +281,7 @@ export default{
             coords != "undefined" ? this.weather.coord.lat : coords.latitude
           }&lon=${
             coords != "undefined" ? this.weather.coord.lon : coords.longitude
-          }&lang=pt_br&exclude=hourly,minutely&appid=${
-            '37be597eefd504da42bc241d52b4ac88'
-          }&units=metric`
+          }&lang=pt_br&exclude=hourly,minutely&appid=${"37be597eefd504da42bc241d52b4ac88"}&units=metric`
         )
           .then((res) => {
             return res.json();
@@ -327,6 +342,23 @@ export default{
     toggleTracking() {
       //
     },
+    toggleDarkMode() {
+      this.darkMode = !this.darkMode;
+
+      localStorage.setItem("darkMode", this.darkMode);
+      this.loadDarkMode();
+    },
+    loadDarkMode() {
+      if (
+        this.darkMode === true ||
+        localStorage.getItem("darkMode") === "true"
+      ) {
+        document.body.classList.add("darkmode-enabled");
+      } else {
+        document.body.classList.remove("darkmode-enabled");
+      }
+    },
   },
+  watch: {},
 };
 </script>

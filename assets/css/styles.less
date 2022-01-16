@@ -5,12 +5,17 @@
 }
 body {
   font-family: "Josefin Sans", sans-serif;
+  color: #080808;
 }
 main {
   max-width: 40%;
   width: 100%;
   margin: auto;
   margin-top: 35px;
+}
+.view{
+  width: 100vw;
+  height: 100vh;
 }
 .separator {
   display: inline-block;
@@ -59,6 +64,21 @@ main {
   }
 }
 
+.darkmode-enabled{
+  background-color: #080808 !important;
+  color: #ccc !important;
+}
+
+.darkmode-enabled input{
+  color: #ccc !important;
+}
+.darkmode-enabled button{
+  color: #ccc !important;
+}
+.darkmode-enabled i{
+  color: #ccc !important;
+}
+
 .serach-box {
   display: flex;
   justify-content: center;
@@ -71,7 +91,7 @@ main {
   // margin-right: 100px;
   height:40px;
   display: flex;
-  &:not(.buttons){
+  &.input{
     width: 100%;
   }
 }
@@ -142,6 +162,24 @@ a{
   align-items: center;
   cursor: pointer;
   margin-top: 3px;
+  i{
+    font-size: 12px !important;
+  }
+}
+.search-box-item.toggle-darkmode{
+
+}
+.toggle-darkmode{
+  width: 20px;
+  height: 40px;
+  border: 1px solid #ccc;
+
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  margin-right: 10px;
   i{
     font-size: 12px !important;
   }
