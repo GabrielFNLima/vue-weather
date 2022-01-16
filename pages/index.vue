@@ -150,12 +150,9 @@
     <div class="develope-by">
       <a href="https://github.com/GabrielFNLima">Developed by Gabriel Lima</a>
       <div class="separator">|</div>
-          <a
-            href="https://github.com/GabrielFNLima/vue-weather"
-            target="_blank"
-          >
-            vue-weather repository
-          </a>
+      <a href="https://github.com/GabrielFNLima/vue-weather" target="_blank">
+        vue-weather repository
+      </a>
     </div>
   </main>
 </template>
@@ -166,221 +163,7 @@ export default {
     return {
       searchBarText: "",
       weather: {},
-      forecast: {
-        lat: 33.44,
-        lon: -94.04,
-        timezone: "America/Chicago",
-        timezone_offset: -21600,
-        current: {
-          dt: 1642267533,
-          sunrise: 1642252799,
-          sunset: 1642289448,
-          temp: 2.78,
-          feels_like: -3.03,
-          pressure: 1015,
-          humidity: 65,
-          dew_point: -2.78,
-          uvi: 2.08,
-          clouds: 100,
-          visibility: 10000,
-          wind_speed: 8.94,
-          wind_deg: 301,
-          wind_gust: 16.09,
-          weather: [
-            {
-              id: 804,
-              main: "Clouds",
-              description: "overcast clouds",
-              icon: "04d",
-            },
-          ],
-        },
-        daily: [
-          {
-            dt: 1642269600,
-            sunrise: 1642252799,
-            sunset: 1642289448,
-            moonrise: 1642282320,
-            moonset: 1642246800,
-            moon_phase: 0.43,
-            temp: {
-              day: 2.82,
-              min: 0.3,
-              max: 11.15,
-              night: 3.45,
-              eve: 0.41,
-              morn: 9.21,
-            },
-            feels_like: { day: -2.65, night: -1.57, eve: -5.2, morn: 5.87 },
-            pressure: 1015,
-            humidity: 63,
-            dew_point: -3.11,
-            wind_speed: 8.76,
-            wind_deg: 319,
-            wind_gust: 14.64,
-            weather: [
-              {
-                id: 616,
-                main: "Snow",
-                description: "rain and snow",
-                icon: "13d",
-              },
-            ],
-            clouds: 100,
-            pop: 0.83,
-            rain: 0.89,
-            snow: 1.04,
-            uvi: 2.49,
-          },
-          {
-            dt: 1642356000,
-            sunrise: 1642339185,
-            sunset: 1642375903,
-            moonrise: 1642371780,
-            moonset: 1642336380,
-            moon_phase: 0.46,
-            temp: {
-              day: 6.87,
-              min: -0.15,
-              max: 9.5,
-              night: 2.62,
-              eve: 5.51,
-              morn: 0.22,
-            },
-            feels_like: { day: 4.73, night: -0.05, eve: 3.26, morn: -4.33 },
-            pressure: 1018,
-            humidity: 60,
-            dew_point: -0.35,
-            wind_speed: 6.96,
-            wind_deg: 338,
-            wind_gust: 12.57,
-            weather: [
-              {
-                id: 800,
-                main: "Clear",
-                description: "clear sky",
-                icon: "01d",
-              },
-            ],
-            clouds: 7,
-            pop: 0.77,
-            uvi: 2.87,
-          },
-          {
-            dt: 1642356000,
-            sunrise: 1642339185,
-            sunset: 1642375903,
-            moonrise: 1642371780,
-            moonset: 1642336380,
-            moon_phase: 0.46,
-            temp: {
-              day: 6.87,
-              min: -0.15,
-              max: 9.5,
-              night: 2.62,
-              eve: 5.51,
-              morn: 0.22,
-            },
-            feels_like: { day: 4.73, night: -0.05, eve: 3.26, morn: -4.33 },
-            pressure: 1018,
-            humidity: 60,
-            dew_point: -0.35,
-            wind_speed: 6.96,
-            wind_deg: 338,
-            wind_gust: 12.57,
-            weather: [
-              {
-                id: 800,
-                main: "Clear",
-                description: "clear sky",
-                icon: "01d",
-              },
-            ],
-            clouds: 7,
-            pop: 0.77,
-            uvi: 2.87,
-          },
-          {
-            dt: 1642356000,
-            sunrise: 1642339185,
-            sunset: 1642375903,
-            moonrise: 1642371780,
-            moonset: 1642336380,
-            moon_phase: 0.46,
-            temp: {
-              day: 6.87,
-              min: -0.15,
-              max: 9.5,
-              night: 2.62,
-              eve: 5.51,
-              morn: 0.22,
-            },
-            feels_like: { day: 4.73, night: -0.05, eve: 3.26, morn: -4.33 },
-            pressure: 1018,
-            humidity: 60,
-            dew_point: -0.35,
-            wind_speed: 6.96,
-            wind_deg: 338,
-            wind_gust: 12.57,
-            weather: [
-              {
-                id: 800,
-                main: "Clear",
-                description: "clear sky",
-                icon: "01d",
-              },
-            ],
-            clouds: 7,
-            pop: 0.77,
-            uvi: 2.87,
-          },
-          {
-            dt: 1642356000,
-            sunrise: 1642339185,
-            sunset: 1642375903,
-            moonrise: 1642371780,
-            moonset: 1642336380,
-            moon_phase: 0.46,
-            temp: {
-              day: 6.87,
-              min: -0.15,
-              max: 9.5,
-              night: 2.62,
-              eve: 5.51,
-              morn: 0.22,
-            },
-            feels_like: { day: 4.73, night: -0.05, eve: 3.26, morn: -4.33 },
-            pressure: 1018,
-            humidity: 60,
-            dew_point: -0.35,
-            wind_speed: 6.96,
-            wind_deg: 338,
-            wind_gust: 12.57,
-            weather: [
-              {
-                id: 800,
-                main: "Clear",
-                description: "clear sky",
-                icon: "01d",
-              },
-            ],
-            clouds: 7,
-            pop: 0.77,
-            uvi: 2.87,
-          },
-        ],
-        alerts: [
-          {
-            sender_name: "NWS Shreveport (Shreveport)",
-            event: "Wind Advisory",
-            start: 1642248000,
-            end: 1642291200,
-            description:
-              "...WIND ADVISORY IN EFFECT FROM 6 AM THIS MORNING TO 6 PM CST\nTHIS EVENING...\n* WHAT...Northwest winds 20 mph with higher gusts up to 30-35 mph.\n* WHERE...Portions of northwest Louisiana, southwest Arkansas\nand east and northeast Texas.\n* WHEN...From 6 AM this morning to 6 PM this evening.\n* IMPACTS...Strong and gusty winds will persist for much of the\ndaylight hours and make for difficult driving with cross winds\nacross portions of I-20 and I-30. In addition, we will see a\nrough chop with waves on area lakes which will create hazardous\nconditions for small craft.",
-            tags: ["Wind"],
-          },
-        ],
-      },
+      forecast: {},
       showContent: false,
       showError: false,
       showLoading: false,
@@ -391,6 +174,9 @@ export default {
   async fetch() {
     this.weather = localStorage.getItem("weather")
       ? JSON.parse(localStorage.getItem("weather"))
+      : {};
+    this.forecast = localStorage.getItem("forecast")
+      ? JSON.parse(localStorage.getItem("forecast"))
       : {};
     this.trackingIsEnable = Boolean(localStorage.getItem("trackingIsEnable"));
   },
@@ -485,7 +271,10 @@ export default {
           .then((res) => {
             return res.json();
           })
-          .then((res) => (this.forecast = res));
+          .then((res) => {
+            localStorage.setItem("forecast", JSON.stringify(res));
+            this.forecast = JSON.parse(localStorage.getItem("forecast"));
+          });
       }
     },
     async fetchWeather(e, type) {
