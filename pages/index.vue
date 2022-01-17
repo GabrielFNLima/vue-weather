@@ -65,13 +65,21 @@
           <div class="weather--icon">
             <img
               :src="
-                !$nuxt.isOffline
-                  ? 'http://openweathermap.org/img/wn/' +
-                    weather.weather[0].icon +
-                    '@2x.png'
-                  : '/weather-sunny-off.svg'
+                'http://openweathermap.org/img/wn/' +
+                weather.weather[0].icon +
+                '@2x.png'
               "
               :style="!$nuxt.isOffline ? '' : 'margin:25px 0'"
+              v-if="!$nuxt.isOffline"
+            />
+            <img
+              :src="
+                !darkMode
+                  ? '/weather-sunny-off-dark.svg'
+                  : '/weather-sunny-off-light.svg'
+              "
+              style="margin:25px 0"
+              v-if="$nuxt.isOffline"
             />
           </div>
           <div class="weather--temp">
@@ -102,15 +110,24 @@
             <span class="date">{{ dateBuilder(item.dt) }}</span>
           </div>
           <div class="forecast--item--icon">
+
             <img
               :src="
-                !$nuxt.isOffline
-                  ? 'http://openweathermap.org/img/wn/' +
-                    weather.weather[0].icon +
-                    '@2x.png'
-                  : '/weather-sunny-off.svg'
+                'http://openweathermap.org/img/wn/' +
+                weather.weather[0].icon +
+                '@2x.png'
               "
               :style="!$nuxt.isOffline ? '' : 'margin:25px 0'"
+              v-if="!$nuxt.isOffline"
+            />
+            <img
+              :src="
+                !darkMode
+                  ? '/weather-sunny-off-dark.svg'
+                  : '/weather-sunny-off-light.svg'
+              "
+              style="margin:25px 0"
+              v-if="$nuxt.isOffline"
             />
 
             <div class="forecast--item--description">
