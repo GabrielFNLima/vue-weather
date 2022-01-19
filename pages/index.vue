@@ -40,7 +40,7 @@
           :disabled="$nuxt.isOffline"
         >
           <v-icon>{{
-            trackingIsEnable == true? "mdi-crosshairs-gps" : "mdi-crosshairs"
+            trackingIsEnable == true ? "mdi-crosshairs-gps" : "mdi-crosshairs"
           }}</v-icon>
         </button>
       </div>
@@ -199,16 +199,17 @@ export default {
     this.forecast = localStorage.getItem("forecast")
       ? JSON.parse(localStorage.getItem("forecast"))
       : {};
-    this.trackingIsEnable = localStorage.getItem("trackingIsEnable") === "true"
-      ? true
-      : false;
+    this.trackingIsEnable =
+      localStorage.getItem("trackingIsEnable") === "true" ? true : false;
 
-    if (this.trackingIsEnable == false && localStorage.getItem("weather") == null)  {
+    if (
+      this.trackingIsEnable == false &&
+      localStorage.getItem("weather") == null
+    ) {
       this.weather = {};
       localStorage.setItem("trackingIsEnable", false);
-      localStorage.setItem("weather", "{}")
+      localStorage.setItem("weather", "{}");
     }
-
 
     if (
       window.matchMedia("(prefers-color-scheme: dark)").matches &&
@@ -326,7 +327,6 @@ export default {
     },
     async fetchWeather(e, type) {
       if (e.key == "Enter" || e.type == "click") {
-
         if (type == "refresh") {
           this.searchBarText = JSON.parse(localStorage.getItem("weather")).name;
         }
@@ -360,26 +360,23 @@ export default {
           (err) => {
             this.showError = true;
             this.errorMessage = err.message;
-        this.weather = {};
+            this.weather = {};
 
             localStorage.setItem("trackingIsEnable", false);
-
           }
         );
-      }else{
+      } else {
         this.weather = {};
         localStorage.setItem("trackingIsEnable", false);
         this.showError = true;
         this.errorMessage = "Geolocation is disable.";
-        localStorage.setItem("weather", "{}")
+        localStorage.setItem("weather", "{}");
       }
-
-      console.log("tracking");
     },
     toggleTracking() {
       this.trackingIsEnable = !this.trackingIsEnable;
 
-      this.tracking()
+      this.tracking();
     },
     toggleDarkMode() {
       this.darkMode = !this.darkMode;
