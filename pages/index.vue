@@ -275,6 +275,7 @@ export default {
         units: "metric",
         lang: "pt",
         appid: "37be597eefd504da42bc241d52b4ac88",
+        exclude: "minutely,hourly,",
       });
 
       const resultWeather = await fetch(
