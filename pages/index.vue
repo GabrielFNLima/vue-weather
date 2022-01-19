@@ -36,19 +36,19 @@
         <button
           type="button"
           class="track-location"
-          @click="tracking"
+          @click="toggleTracking"
           :disabled="$nuxt.isOffline"
         >
           <v-icon>{{
-            trackingIsEnable ? "mdi-crosshairs-gps" : "mdi-crosshairs"
+            trackingIsEnable == true? "mdi-crosshairs-gps" : "mdi-crosshairs"
           }}</v-icon>
         </button>
       </div>
     </div>
-    <div class="error-message" v-if="showError === true">
-      {{ weather.message }}
+    <div class="error-message" v-if="showError">
+      {{ errorMessage }}
     </div>
-    <div class="loading-message" v-if="showLoading === true">Loading...</div>
+    <div class="loading-message" v-if="showLoading">Loading...</div>
     <div class="weather--wrap" v-if="typeof weather.main != 'undefined'">
       <div class="weather--item--location">
         <div class="location-box">
@@ -78,7 +78,7 @@
                   ? '/weather-sunny-off-dark.svg'
                   : '/weather-sunny-off-light.svg'
               "
-              style="margin:25px 0"
+              style="margin: 25px 0"
               v-if="$nuxt.isOffline"
             />
           </div>
@@ -110,7 +110,6 @@
             <span class="date">{{ dateBuilder(item.dt) }}</span>
           </div>
           <div class="forecast--item--icon">
-
             <img
               :src="
                 'http://openweathermap.org/img/wn/' +
@@ -126,7 +125,7 @@
                   ? '/weather-sunny-off-dark.svg'
                   : '/weather-sunny-off-light.svg'
               "
-              style="margin:25px 0"
+              style="margin: 25px 0"
               v-if="$nuxt.isOffline"
             />
 
@@ -186,11 +185,10 @@ export default {
       searchBarText: "",
       weather: {},
       forecast: {},
-      showContent: false,
       showError: false,
+      errorMessage: "",
       showLoading: false,
       trackingIsEnable: false,
-      trackingCoords: {},
       darkMode: false,
     };
   },
@@ -201,7 +199,16 @@ export default {
     this.forecast = localStorage.getItem("forecast")
       ? JSON.parse(localStorage.getItem("forecast"))
       : {};
-    this.trackingIsEnable = Boolean(localStorage.getItem("trackingIsEnable"));
+    this.trackingIsEnable = localStorage.getItem("trackingIsEnable") === "true"
+      ? true
+      : false;
+
+    if (this.trackingIsEnable == false && localStorage.getItem("weather") == null)  {
+      this.weather = {};
+      localStorage.setItem("trackingIsEnable", false);
+      localStorage.setItem("weather", "{}")
+    }
+
 
     if (
       window.matchMedia("(prefers-color-scheme: dark)").matches &&
@@ -247,7 +254,6 @@ export default {
       let hours = d.getHours();
       let minutes = d.getMinutes() < 10 ? "0" + d.getMinutes() : d.getMinutes();
 
-      // return `${month} ${date}, ${year}`;
       switch (type) {
         case "day":
           return day;
@@ -260,71 +266,78 @@ export default {
       }
     },
     async loadWeather(coords) {
-      console.log("https://api.openweathermap.org/data/2.5");
-      await fetch(
+      this.showLoading = true;
+      this.showError = false;
+      this.weather = {};
+
+      const optionsParams = new URLSearchParams({
+        units: "metric",
+        lang: "pt",
+        appid: "37be597eefd504da42bc241d52b4ac88",
+      });
+
+      const resultWeather = await fetch(
         `https://api.openweathermap.org/data/2.5/weather?${
           coords
             ? "lat=" + coords.latitude + "&lon=" + coords.longitude
             : "q=" + this.searchBarText
-        }&lang=pt_br&appid=${"37be597eefd504da42bc241d52b4ac88"}&units=metric`
-      )
-        .then((res) => {
-          return res.json();
-        })
-        .then((res) => {
-          localStorage.setItem("weather", JSON.stringify(res));
-          this.weather = JSON.parse(localStorage.getItem("weather"));
-          this.showLoading = false;
-          if (res.cod != "404") {
-            this.searchBarText = "";
-          }
-        });
+        }${"&" + optionsParams}`
+      );
+      const weatherData = await resultWeather.json();
+
+      await localStorage.setItem("weather", JSON.stringify(weatherData));
+
+      this.weather = JSON.parse(localStorage.getItem("weather"));
+
+      this.showLoading = false;
+
+      if (weatherData.cod != "404") {
+        this.searchBarText = "";
+      }
+
       if (
-        this.weather.cod == "404" ||
-        this.weather.cod == "400" ||
-        this.weather.cod == "401"
+        weatherData.cod == "404" ||
+        weatherData.cod == "400" ||
+        weatherData.cod == "401"
       ) {
         this.showError = true;
+        this.errorMessage = this.weather.message;
+        return;
       } else {
         this.showError = false;
       }
-      if (
-        this.weather.cod != "404" ||
-        this.weather.cod != "400" ||
-        this.weather.cod != "401"
-      ) {
-        await fetch(
-          `https://api.openweathermap.org/data/2.5/onecall?lat=${
-            coords != "undefined" ? this.weather.coord.lat : coords.latitude
-          }&lon=${
-            coords != "undefined" ? this.weather.coord.lon : coords.longitude
-          }&lang=pt_br&exclude=hourly,minutely&appid=${"37be597eefd504da42bc241d52b4ac88"}&units=metric`
-        )
-          .then((res) => {
-            return res.json();
-          })
-          .then((res) => {
-            localStorage.setItem("forecast", JSON.stringify(res));
-            this.forecast = JSON.parse(localStorage.getItem("forecast"));
-          });
-      }
+
+      const paramsForecast = new URLSearchParams({
+        lat: coords != "undefined" ? this.weather.coord.lat : coords.latitude,
+        lon: coords != "undefined" ? this.weather.coord.lon : coords.longitude,
+      });
+
+      const resultForecast = await fetch(
+        `https://api.openweathermap.org/data/2.5/onecall?${paramsForecast}${
+          "&" + optionsParams
+        }`
+      );
+
+      const forecastData = await resultForecast.json();
+
+      await localStorage.setItem("forecast", JSON.stringify(forecastData));
+
+      this.forecast = JSON.parse(localStorage.getItem("forecast"));
     },
     async fetchWeather(e, type) {
       if (e.key == "Enter" || e.type == "click") {
-        this.showLoading = true;
-        this.weather = {};
 
         if (type == "refresh") {
           this.searchBarText = JSON.parse(localStorage.getItem("weather")).name;
         }
         if (this.searchBarText == "") {
           this.showError = true;
-          this.weather.message = "Please enter a valid city name";
+          this.errorMessage = "Please enter a valid city name";
           this.showLoading = false;
           return;
         }
 
-        this.loadWeather();
+        await this.loadWeather();
       }
     },
     tracking() {
@@ -334,30 +347,39 @@ export default {
         return;
       }
 
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          this.showError = false;
-          this.trackingIsEnable = true;
-          this.trackingCoords = pos.coords;
+      if (this.trackingIsEnable) {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            this.showError = false;
+            this.trackingIsEnable = true;
 
-          this.loadWeather(pos.coords);
-        },
-        (err) => {
-          this.showError = true;
-          this.weather.message = err.message;
-        }
-      );
+            localStorage.setItem("trackingIsEnable", true);
 
-      // if (this.trackingIsEnable) {
-      //   this.trackingIsEnable = false;
-      //   localStorage.setItem("trackingIsEnable", false);
-      // } else {
-      //   this.trackingIsEnable = true;
-      //   localStorage.setItem("trackingIsEnable", true);
-      // }
+            this.loadWeather(pos.coords);
+          },
+          (err) => {
+            this.showError = true;
+            this.errorMessage = err.message;
+        this.weather = {};
+
+            localStorage.setItem("trackingIsEnable", false);
+
+          }
+        );
+      }else{
+        this.weather = {};
+        localStorage.setItem("trackingIsEnable", false);
+        this.showError = true;
+        this.errorMessage = "Geolocation is disable.";
+        localStorage.setItem("weather", "{}")
+      }
+
+      console.log("tracking");
     },
     toggleTracking() {
-      //
+      this.trackingIsEnable = !this.trackingIsEnable;
+
+      this.tracking()
     },
     toggleDarkMode() {
       this.darkMode = !this.darkMode;
@@ -376,6 +398,5 @@ export default {
       }
     },
   },
-  watch: {},
 };
 </script>

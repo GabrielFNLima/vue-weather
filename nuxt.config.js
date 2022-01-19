@@ -39,7 +39,14 @@ export default {
     '@nuxtjs/google-fonts',
     '@nuxtjs/vuetify',
     '@nuxtjs/dotenv',
+    '@nuxtjs/fontawesome'
   ],
+  fontawesome: {
+    icons: {
+      solid:true,
+      brands:true
+    }
+  },
   googleFonts: {
     families: {
       Roboto: true,
@@ -53,8 +60,8 @@ export default {
   },
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
+    '@nuxtjs/axios',
   ],
-
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
   }
