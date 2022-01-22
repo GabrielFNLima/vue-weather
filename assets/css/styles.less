@@ -12,6 +12,8 @@ main {
   width: 100%;
   margin: auto;
   margin-top: 35px;
+
+  position: relative;
 }
 .view{
   width: 100vw;
@@ -183,6 +185,63 @@ a{
   i{
     font-size: 12px !important;
   }
+}
+
+.search-suggestions {
+  position: absolute;
+  top: 50px;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  z-index: 1;
+  max-height: 200px;
+  overflow-y: auto;
+
+  transition: all .2s;
+
+  display: flex;
+  flex-direction: column;
+
+  z-index: 1;
+
+  span{
+    margin: 10px 0;
+    display: inline-block;
+    padding: 5px;
+    border-radius: 2.5px;
+    cursor: pointer;
+    &:first-child{
+      margin-top: 0;
+    }
+    &:hover{
+      background-color: #ccc;
+      color: #080808;
+    }
+    &:active{
+      background-color: #ccc;
+      color: #080808;
+    }
+  }
+
+
+}
+.overflow-suggestions{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: red;
+  overflow-y: auto;
+
+  z-index: 8;
+}
+
+.darkmode-enabled .search-suggestions{
+  background-color: #1f1f1f !important;
 }
 
 .weather {
