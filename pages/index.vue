@@ -378,7 +378,7 @@ export default {
       const optionsParams = new URLSearchParams({
         units: "metric",
         lang: "pt",
-        appid: process.env.API_KEY,
+        appid: process.env.VUE_APP_API_KEY,
         exclude: "minutely,hourly,",
       });
 
@@ -513,7 +513,7 @@ export default {
 
     async mapboxRequest(query, limit) {
       const params = new URLSearchParams({
-        access_token: process.env.API_KEY_MAPBOX,
+        access_token: process.env.VUE_APP_API_KEY_MAPBOX,
       });
       const result = await fetch(
         `https://api.mapbox.com/geocoding/v5/mapbox.places/${query}.json?${params}`
