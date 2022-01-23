@@ -15,7 +15,7 @@ main {
 
   position: relative;
 }
-.view{
+.view {
   width: 100vw;
   height: 100vh;
 }
@@ -45,39 +45,35 @@ main {
   margin: auto;
   border-radius: 4px;
   opacity: 0.8;
-  transition: all .2s;
-  &:hover{
+  transition: all 0.2s;
+  &:hover {
     opacity: 1;
   }
 
-  i{
+  i {
     margin-right: 10px;
   }
 
   @media (max-width: 768px) {
-
-      max-width: 85%;
-
+    max-width: 85%;
   }
   @media (max-width: 425px) {
-
-      max-width: 95%;
-
+    max-width: 95%;
   }
 }
 
-.darkmode-enabled{
+.darkmode-enabled {
   background-color: #080808 !important;
   color: #ccc !important;
 }
 
-.darkmode-enabled input{
+.darkmode-enabled input {
   color: #ccc !important;
 }
-.darkmode-enabled button{
+.darkmode-enabled button {
   color: #ccc !important;
 }
-.darkmode-enabled i{
+.darkmode-enabled i {
   color: #ccc !important;
 }
 
@@ -87,13 +83,16 @@ main {
   align-items: center;
   margin-bottom: 20px;
   width: 100%;
+
+  z-index: 88;
+  position: relative;
 }
-.search-box-item{
+.search-box-item {
   // width:100%;
   // margin-right: 100px;
-  height:40px;
+  height: 40px;
   display: flex;
-  &.input{
+  &.input {
     width: 100%;
   }
 }
@@ -106,14 +105,13 @@ main {
   padding: 0 10px;
   font-size: 16px;
   outline: none;
-
 }
-button{
-  &:disabled{
+button {
+  &:disabled {
     cursor: unset;
   }
 }
-a{
+a {
   text-decoration: none;
   color: inherit;
 }
@@ -127,15 +125,15 @@ a{
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  margin-right: 10px
+  margin-right: 10px;
 }
 
-.buttons{
+.buttons {
   display: flex;
   flex-direction: column;
   // background-color: red;
   height: 40px;
-  width:20px;
+  width: 20px;
 }
 
 .button-refresh {
@@ -149,11 +147,11 @@ a{
   align-items: center;
   cursor: pointer;
   margin-bottom: 3px;
-  i{
+  i {
     font-size: 14px !important;
   }
 }
-.track-location{
+.track-location {
   width: 20px;
   height: 20px;
   border: 1px solid #ccc;
@@ -164,14 +162,13 @@ a{
   align-items: center;
   cursor: pointer;
   margin-top: 3px;
-  i{
+  i {
     font-size: 12px !important;
   }
 }
-.search-box-item.toggle-darkmode{
-
+.search-box-item.toggle-darkmode {
 }
-.toggle-darkmode{
+.toggle-darkmode {
   width: 20px;
   height: 40px;
   border: 1px solid #ccc;
@@ -182,7 +179,7 @@ a{
   align-items: center;
   cursor: pointer;
   margin-right: 10px;
-  i{
+  i {
     font-size: 12px !important;
   }
 }
@@ -200,48 +197,200 @@ a{
   max-height: 200px;
   overflow-y: auto;
 
-  transition: all .2s;
+  transition: all 0.2s;
 
   display: flex;
   flex-direction: column;
 
-  z-index: 1;
+  z-index: 88;
 
-  span{
+  span {
     margin: 10px 0;
     display: inline-block;
     padding: 5px;
     border-radius: 2.5px;
     cursor: pointer;
-    &:first-child{
+    &:first-child {
       margin-top: 0;
     }
-    &:hover{
+    &:hover {
       background-color: #ccc;
       color: #080808;
     }
-    &:active{
+    &:active {
       background-color: #ccc;
       color: #080808;
     }
   }
-
-
 }
-.overflow-suggestions{
-  position: absolute;
+
+.search-suggestion-overlayer {
+  position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: red;
-  overflow-y: auto;
-
-  z-index: 8;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 87;
 }
 
-.darkmode-enabled .search-suggestions{
+.darkmode-enabled .search-suggestions {
   background-color: #1f1f1f !important;
+}
+
+.weather-alerts {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  z-index: 90;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: default;
+  border-radius: 50%;
+
+  color: #080808;
+
+  @media (max-width: 768px) {
+    // bottom: 30px;
+    // left: 15px;
+    // transform: unset;
+  }
+
+  &.no-alerts {
+    display: none;
+  }
+
+  &--counter {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 2;
+
+    background-color: #505050;
+    color: #ccc;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    cursor: default;
+
+    font-size: 14px;
+    font-weight: bold;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  &--content {
+    position: absolute;
+    top: 0px;
+    left: -100%;
+    z-index: 999;
+    overflow-y: auto;
+
+    transition: left 0.8s ease-in-out;
+
+    padding: 10px 20px;
+    border-radius: 0 5px 5px 0px;
+
+    background-color: #505050;
+    color: #ccc;
+    max-width: 400px;
+    width: 400px;
+    height: 100vh;
+
+    cursor: default;
+
+    @media (max-width: 768px) {
+      width: 80vw;
+    }
+
+    &.active {
+      left: 0;
+    }
+
+    &--close {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: absolute;
+      right: 15px;
+
+      cursor: pointer;
+
+      background-color: #ccc;
+      color: #080808;
+
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+    }
+
+    &--overlayer {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 99;
+    }
+
+    &--item {
+      margin: 20px 0;
+      border-top: 2px solid #ccc;
+
+      &.no-border {
+        border-top: 0;
+      }
+      &--title {
+        font-size: 20px;
+        font-weight: bold;
+        margin: 10px 0;
+      }
+
+      &--duration {
+        font-size: 14px;
+        margin-bottom: 10px;
+
+        display: flex;
+        flex-direction: column;
+
+        span {
+          display: flex;
+          align-items: center;
+          margin-bottom: 5px;
+        }
+      }
+
+      &--description {
+        font-size: 12px;
+        margin-bottom: 5px;
+      }
+
+      i {
+        color: #ccc !important;
+      }
+    }
+  }
+  .icon {
+    color: #080808 !important;
+    font-size: 50px !important;
+  }
+  .alert {
+    position: fixed;
+    bottom: 50px;
+    left: 30%;
+    @media (max-width: 768px) {
+      left: 15%;
+    }
+  }
+}
+
+.darkmode-enabled .weather-alerts .icon {
+  color: #ccc !important;
 }
 
 .weather {
@@ -269,7 +418,6 @@ a{
     justify-content: center;
     align-items: center;
     flex-direction: column;
-
   }
 
   &--temp {
@@ -340,7 +488,7 @@ a{
       flex-direction: column;
       text-align: center;
 
-      .date{
+      .date {
         font-size: 14px;
         opacity: 0.8;
       }
@@ -351,7 +499,7 @@ a{
       align-items: center;
       flex-direction: column;
     }
-    &--description{
+    &--description {
       font-size: 14px;
       margin-bottom: 10px;
       opacity: 0.8;
@@ -397,8 +545,7 @@ a{
   }
 }
 
-
-.develope-by{
+.develope-by {
   display: flex;
   justify-content: center;
   align-items: center;

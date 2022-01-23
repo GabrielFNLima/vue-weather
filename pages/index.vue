@@ -76,15 +76,11 @@
       <div class="weather--item--weather-details">
         <div class="weather--data">
           <div class="weather--icon">
-            <!-- <img
-              :src="
-                'http://openweathermap.org/img/wn/' +
-                weather.weather[0].icon +
-                '@2x.png'
-              "
+            <img
+              :src="weather.icon"
               :style="!$nuxt.isOffline ? '' : 'margin:25px 0'"
               v-if="!$nuxt.isOffline"
-            /> -->
+            />
             <img
               :src="
                 !darkMode
@@ -100,7 +96,7 @@
             <span class="deg">&#8451;</span>
           </div>
           <div class="weather--description">
-            <!-- {{ weather.weather[0].description }} -->
+            {{ weather.description }}
             <div class="separator">|</div>
             <div class="weather--wind">
               <div class="wind-speed">
@@ -181,6 +177,65 @@
       You are offline
     </div>
 
+    <!-- show weather alerts -->
+    <!-- TODO: create a div that cover 100vw to make possible mobile -->
+    <div
+      class="weather-alerts"
+      v-if="weatherAlerts.length > 0"
+    >
+      <div class="alert">
+        <!-- counter -->
+        <div class="weather-alerts--counter">
+          <span class="counter">{{ weatherAlerts.length }}</span>
+        </div>
+        <v-icon @click="toggleShowWeaterAlerts" class="icon"
+          >mdi-alert-circle</v-icon
+        >
+      </div>
+
+      <div v-if="showWeatherAlerts" class="weather-alerts--content--overlayer" @click="toggleShowWeaterAlerts"></div>
+      <div v-if="showWeatherAlerts" :class="['weather-alerts--content',showWeatherAlerts ? 'active':'']">
+        <!-- overlayer -->
+        <!-- close icon -->
+        <div @click="toggleShowWeaterAlerts" class="weather-alerts--content--close">
+          <span>X</span>
+        </div>
+        <h2>Alerts for {{weather.name}}</h2>
+        <div
+          :class="['weather-alerts--content--item',index === 0 ? 'no-border':'']"
+          v-for="(item, index) in weatherAlerts"
+        >
+          <div class="weather-alerts--content--item--title">
+            {{ item.event }}
+          </div>
+          <!-- date -->
+          <!-- duration start and end-->
+          <div class="weather-alerts--content--item--duration">
+            <span class="start">
+              <v-icon> mdi-clock-start </v-icon>
+              {{ dateBuilder(item.start, "dateTime") }}
+            </span>
+            <span class="end">
+              <v-icon> mdi-clock-end </v-icon>
+              {{ dateBuilder(item.end, "dateTime") }}
+            </span>
+          </div>
+
+          <div class="weather-alerts--content--item--description">
+            {{ item.description }}
+          </div>
+          <!-- notify by -->
+          <div class="weather-alerts--content--item--notify-by">
+            <div class="notify-by">
+              <v-icon> mdi-bell </v-icon>
+              Notify by
+              {{ item.sender_name }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="develope-by">
       <a href="https://github.com/GabrielFNLima">Developed by Gabriel Lima</a>
       <div class="separator">|</div>
@@ -188,6 +243,9 @@
         vue-weather repository
       </a>
     </div>
+
+    <!-- search suggestion overlayer -->
+    <div class="search-suggestion-overlayer" v-if="showSearchSuggestions" @click="closeSearchSuggestions"></div>
   </main>
 </template>
 
@@ -206,12 +264,15 @@ export default {
       darkMode: false,
 
       showWeather: false,
+      weatherAlerts: [],
+      showWeatherAlerts: false,
 
       switchSearch: false,
 
       searchSuggestions: [],
       searchSuggestion: {},
       showSearchSuggestions: false,
+
     };
   },
   async fetch() {
@@ -224,26 +285,21 @@ export default {
     this.searchSuggestion = localStorage.getItem("searchSuggestion")
       ? JSON.parse(localStorage.getItem("searchSuggestion"))
       : {};
+    this.weatherAlerts = localStorage.getItem("alerts")
+      ? JSON.parse(localStorage.getItem("alerts"))
+      : [];
     this.trackingIsEnable =
       localStorage.getItem("trackingIsEnable") === "true" ? true : false;
 
-    document.querySelector("body").addEventListener("click", () => {
-      if (this.showSearchSuggestions) {
-        this.showSearchSuggestions = false;
-        this.searchBarText = "";
-      }
-    });
 
     // localStorage.clear();
 
-    if (localStorage.getItem("weather") != null) {
+    if (localStorage.getItem("weather")) {
       this.showWeather = true;
-    }else{
+    } else {
       this.showWeather = false;
-      // localStorage.setItem("weather", "{}");
-
+      localStorage.setItem("weather", "{}");
     }
-
 
     if (
       this.trackingIsEnable == false &&
@@ -305,10 +361,14 @@ export default {
           return month;
         case "time":
           return `${hours}:${minutes}`;
+        // date and time
+        case "dateTime":
+          return `${day} ${date} ${month} ${year} ${hours}:${minutes}`;
         default:
           return `${month} ${date}`;
       }
     },
+
     async loadWeather(e) {
       this.showLoading = true;
       this.showError = false;
@@ -345,7 +405,6 @@ export default {
         paramsOneCall.append("lon", this.searchSuggestion.center[0]);
       }
 
-
       const resultOneCall = await fetch(
         `https://api.openweathermap.org/data/2.5/onecall?${paramsOneCall}${
           "&" + optionsParams
@@ -353,7 +412,6 @@ export default {
       );
 
       const onceCallData = await resultOneCall.json();
-
       await localStorage.setItem(
         "forecast",
         JSON.stringify(onceCallData.daily)
@@ -366,9 +424,20 @@ export default {
         JSON.stringify({
           ...onceCallData.current,
           name: this.searchSuggestion.text,
+          icon: `http://openweathermap.org/img/wn/${onceCallData.current.weather[0].icon}@2x.png`,
+          description: onceCallData.current.weather[0].description,
         })
       );
       this.weather = JSON.parse(localStorage.getItem("weather"));
+
+      if(onceCallData.alerts) {
+        await localStorage.setItem("alerts", JSON.stringify(onceCallData.alerts));
+        this.weatherAlerts = JSON.parse(localStorage.getItem("alerts"));
+        this.showWeatherAlerts = true;
+      }else{
+        this.weatherAlerts = [];
+        localStorage.setItem("alerts", "[]");
+      }
 
       this.showLoading = false;
       this.showWeather = true;
@@ -401,7 +470,7 @@ export default {
 
         const suggestion = await this.mapboxRequest(this.searchBarText);
         this.showSearchSuggestions = false;
-        this.switchSearch = false
+        this.switchSearch = false;
 
         await localStorage.setItem(
           "searchSuggestion",
@@ -416,15 +485,14 @@ export default {
       }
       // await this.loadWeather(e);
     },
+
     async searchWeatherSuggestions(e) {
       this.showWeather = true;
       this.showSearchSuggestions = true;
 
-
       const searchData = await this.mapboxRequest(this.searchBarText);
 
       this.searchSuggestions = searchData.features;
-
     },
     async selectSearchSuggestion(suggestion) {
       this.showSearchSuggestions = false;
@@ -439,9 +507,13 @@ export default {
 
       this.loadWeather();
     },
+    closeSearchSuggestions() {
+      this.showSearchSuggestions = false;
+    },
+
     async mapboxRequest(query, limit) {
       const params = new URLSearchParams({
-        access_token:process.env.API_KEY_MAPBOX,
+        access_token: process.env.API_KEY_MAPBOX,
       });
       const result = await fetch(
         `https://api.mapbox.com/geocoding/v5/mapbox.places/${query}.json?${params}`
@@ -449,6 +521,7 @@ export default {
 
       return result.json();
     },
+
     tracking() {
       if (!("geolocation" in navigator)) {
         this.showError = true;
@@ -495,6 +568,7 @@ export default {
 
       this.tracking();
     },
+
     toggleDarkMode() {
       this.darkMode = !this.darkMode;
 
@@ -510,6 +584,10 @@ export default {
       } else {
         document.body.classList.remove("darkmode-enabled");
       }
+    },
+
+    toggleShowWeaterAlerts() {
+      this.showWeatherAlerts = !this.showWeatherAlerts;
     },
   },
   watch: {
